@@ -20,6 +20,8 @@ async function fetchTradableTokens(): Promise<void> {
     const allTradableResponse: any = await response.json();
     console.log(allTradableResponse);
     const token_address: any[] = allTradableResponse;
+    const dataString = JSON.stringify(allTradableResponse, null, 2);
+    fs.writeFileSync('./all_tokens.txt', dataString);
 
     for (let i = 0; i < token_address.length; i++) {
       await processToken(token_address[i]);
@@ -64,6 +66,11 @@ async function processToken(tokenAddress: any) {
     
     if(cnt >= 500) {
       console.log(tokenAddress, ":", cnt);
+      const filePath = 'tokens.txt';
+      fs.appendFile(filePath, tokenAddress, "utf8", (err) => {});
+      fs.appendFile(filePath, ":", "utf8", (err) => {});
+      fs.appendFile(filePath, String(cnt), "utf8", (err) => {});
+      fs.appendFile(filePath, "\n", "utf8", (err) => {});
       // console.log(":");
       // console.log(cnt);
     }
